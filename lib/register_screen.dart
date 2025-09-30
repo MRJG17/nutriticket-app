@@ -1,12 +1,32 @@
 import 'package:flutter/material.dart';
 
-class RegisterScreen extends StatelessWidget {
-  RegisterScreen({super.key});
+// ----------------------------------------------------------------------
+// CÓDIGO CORREGIDO: RegisterScreen ahora es un StatefulWidget
+// ----------------------------------------------------------------------
 
+// 1. La clase principal hereda de StatefulWidget
+class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({super.key});
+
+  @override
+  State<RegisterScreen> createState() => _RegisterScreenState();
+}
+
+// 2. La clase State maneja los datos que cambian (los controladores)
+class _RegisterScreenState extends State<RegisterScreen> {
   // Controladores para los campos de texto
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
+  // 3. Se añade el método dispose para liberar recursos
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _nameController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,19 +42,19 @@ class RegisterScreen extends StatelessWidget {
           },
         ),
       ),
-      body: Padding(
+      body: SingleChildScrollView( // **MEJORA:** Permite hacer scroll para evitar desbordamiento
         padding: const EdgeInsets.all(20.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start, // Cambiado de center a start
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch, // Alinea los widgets para usar todo el ancho
           children: [
-            const SizedBox(height: 40), // Espacio desde arriba
+            const SizedBox(height: 40),
 
-            // Título "Crear Cuenta"
             const Text(
               'Crear Cuenta',
               style: TextStyle(
                 fontSize: 32,
-                fontWeight: FontWeight.w500 , // Cambiado de w300 a bold
+                fontWeight: FontWeight.w500,
                 fontStyle: FontStyle.italic,
                 color: Colors.black,
                 letterSpacing: 1.2,
@@ -96,14 +116,13 @@ class RegisterScreen extends StatelessWidget {
 
             // Botón "Crear Cuenta" verde
             SizedBox(
-              width: double.infinity,
               height: 50,
               child: ElevatedButton(
                 onPressed: () {
-                  // Lógica de creación de cuenta
                   print('Nombre: ${_nameController.text}');
                   print('Email: ${_emailController.text}');
                   print('Password: ${_passwordController.text}');
+                  // Aquí iría la lógica de registro real
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green,
@@ -120,6 +139,10 @@ class RegisterScreen extends StatelessWidget {
             ),
             const SizedBox(height: 30),
 
+            const Center(child: Text("— O regístrate con —", style: TextStyle(color: Colors.grey))),
+            const SizedBox(height: 20),
+
+
             // Logos de Google y Facebook en horizontal
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -129,6 +152,7 @@ class RegisterScreen extends StatelessWidget {
                   onPressed: () {
                     print('Registro con Google');
                   },
+                  // El Image.asset requiere que tengas los archivos en la carpeta 'assets/images/'
                   icon: Image.asset(
                     'assets/images/google.png',
                     width: 50,

@@ -10,18 +10,39 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: LoginScreen(),
+      // La clase es ahora un StatefulWidget, así que se instancia diferente.
+      home: LoginScreen(), 
     );
   }
 }
 
-class LoginScreen extends StatelessWidget {
-  LoginScreen({super.key});
+// ----------------------------------------------------------------------
+// CÓDIGO CORREGIDO: LoginScreen ahora es un StatefulWidget
+// ----------------------------------------------------------------------
 
+// 1. La clase principal hereda de StatefulWidget
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+// 2. La clase State maneja los datos que cambian (los controladores)
+class _LoginScreenState extends State<LoginScreen> {
+  // Los controladores se definen aquí, en el State
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
+  // 3. Se añade el método dispose para liberar recursos
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +57,7 @@ class LoginScreen extends StatelessWidget {
               'NutriTicket',
               style: TextStyle(
                 fontSize: 42,
-                fontWeight: FontWeight.w500 , // Cambiado de w300 a bold
+                fontWeight: FontWeight.w500,
                 fontStyle: FontStyle.italic,
                 color: Colors.black,
                 letterSpacing: 1.5,
@@ -82,6 +103,7 @@ class LoginScreen extends StatelessWidget {
               height: 50,
               child: ElevatedButton(
                 onPressed: () {
+                  // **Recomendación:** Siempre limpia los controladores después de una acción de Login/Submit
                   print('Email: ${_emailController.text}');
                   print('Password: ${_passwordController.text}');
                 },
@@ -100,13 +122,11 @@ class LoginScreen extends StatelessWidget {
             ),
             const SizedBox(height: 20),
 
-            // Texto "Registrarse" ahora navega a RegisterScreen
             TextButton(
               onPressed: () {
-                // Navegación a la pantalla de registro
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => RegisterScreen()),
+                  MaterialPageRoute(builder: (context) => const RegisterScreen()),
                 );
               },
               child: const Text(
